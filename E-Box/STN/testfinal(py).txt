@@ -1,0 +1,46 @@
+
+import paho.mqtt.client as mqtt
+import requests
+import json
+import time
+
+url = 'http://192.168.251.57:3003/presences'
+topics = ["G001", "G002", "G003"]
+
+def on_connect(client, userdata, flags, rc):
+    print(f"Connected with result code {rc}")
+    for topic in topics: 
+        client.subscribe(topic)
+        
+
+def on_message(client, userdata, msg):
+    print(f"Received message on topic {msg.topic}: {msg.payload}")
+    
+    try:
+        # Convertir le payload en JSON
+        data = json.loads(msg.payload)
+        
+        # Envoyer les données via une requête HTTP POST
+        response = requests.post(url,json=data)
+        
+        if response.status_code == 200:
+            print("Data sent successfully!")
+        else:
+            print(f"Failed to send data. Status code: {response.status_code}")
+            print("Response:", response.text)
+        
+    except json.JSONDecodeError:
+        print("Payload is not valid JSON. Cannot send data.")
+    except requests.exceptions.RequestException as e:
+        print("An error occurred:", e)
+
+# Créer une instance du client MQTT
+client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message
+
+# Se connecter au broker MQTT
+client.connect("192.168.251.178", 1883, 60)
+
+# Démarrer la boucle de communication
+client.loop_forever()
