@@ -7,3 +7,7 @@ puters to create sensor networks in classrooms. Each student receives an RFID ca
  web application offers advanced features such as schedule management, absence notification,
  and statistics generation. This system meets the need for attendance management in higher
  education while providing an intuitive user experience.
+
+Back-end (cmd/code .) : npm run  start :dev ( Application is running on: http://127.0.0.1:3003 )
+Front-end (my-app /cmd/code .) : npm run start ( http://localhost:3000 )
+AI (absence file /cmd ) : python app.py
